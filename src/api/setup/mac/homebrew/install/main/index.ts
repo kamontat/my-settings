@@ -7,6 +7,7 @@ export const InstallBrewMain = (log: Logger, _opts: {}) => {
     {
       name: "appcleaner",
       cask: true,
+      default: false,
       desc: "Allows you to thoroughly uninstall unwanted apps",
       link: "https://freemacsoft.net/appcleaner"
     },

@@ -1,4 +1,4 @@
-import prompts, { PromptObject } from "prompts";
+import prompts, { PromptObject, Answers } from "prompts";
 import { Logger } from "../model/logger";
 
 import Chalk from "chalk";
@@ -16,6 +16,8 @@ export interface Question extends PromptObject {
 }
 
 export class Asker {
+  private callback: boolean = false;
+
   private exit: boolean;
   private ask: boolean;
 
@@ -31,6 +33,10 @@ export class Asker {
 
   setAsk(ask: boolean) {
     this.ask = ask;
+  }
+
+  NeverPrompts(bool: boolean) {
+    this.callback = bool;
   }
 
   Ask(log: Logger, _questions: Question[]) {
@@ -62,6 +68,49 @@ export class Asker {
       return v as PromptObject;
     });
 
+    if (this.callback) {
+      let prev: any = undefined;
+      const _answers = question.reduce(
+        (p, c) => {
+          const type =
+            typeof c.type === "function" ? c.type(prev, p, c) : c.type;
+          const name =
+            typeof c.name === "function" ? c.name(prev, p, c) : c.name;
+
+          let initial = undefined;
+          if (c.initial !== undefined && c.initial !== null) {
+            log.debug(`${name} have initial set is ${c.initial}`);
+            if (typeof c.initial === "function")
+              initial = c.initial(prev, p, c);
+            else initial = c.initial;
+          } else {
+            if (type === "number" || type === "select") initial = 0;
+            if (
+              type === "text" ||
+              type === "invisible" ||
+              type === "autocomplete" ||
+              type === "password"
+            )
+              initial = "";
+            if (type === "multiselect" || type === "list") initial = [];
+
+            log.debug(`${name} no initial, fallback to ${initial}`);
+          }
+
+          p[name] = initial;
+          prev = initial; // save prev
+
+          return p;
+        },
+        {} as Answers<string>
+      );
+
+      const answers = Object.values(_answers);
+      log.debug(`Inital value (JSON) : ${JSON.stringify(_answers)}`);
+      log.debug(`Inital value (Array): ${answers}`);
+      prompts.inject(answers);
+    }
+
     return prompts(question, {
       onCancel: async (prompt, _answer) => {
         const name = prompt.name.toString();
@@ -87,7 +136,7 @@ export class Asker {
         } else if (this.exit) return process.exit(3);
         return undefined;
       },
-      onSubmit: async (prompts, _answer) => {
+      onSubmit: async (prompts, _answer, _answers) => {
         console.log(); // for formating
         console.log(); // for formating
 
@@ -96,9 +145,11 @@ export class Asker {
           typeof _answer === "object" && !Array.isArray(_answer)
             ? _answer[name]
             : _answer;
+
+        log.debug(`User raw answer: ${JSON.stringify(_answers)}`);
         log.log(`User submit "${answer}" to ${name}`);
 
-        const result = await actions[name](answer, _answer);
+        const result = await actions[name](answer, _answers);
         if (result === true || result === "true") {
           log.debug("Skip all set of questions");
           return true;

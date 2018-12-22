@@ -38,6 +38,8 @@ export const InstallQuestion = (log: Logger, _questions: InstallQuestion[]) => {
     ];
 
     let type: PromptType = "toggle";
+    let def: number | boolean | [number] = true;
+
     if (i.choices && i.choices.length > 0) {
       type = i.muliselect ? "multiselect" : "select";
       if (typeof i.choices[0] === "string") {
@@ -58,17 +60,13 @@ export const InstallQuestion = (log: Logger, _questions: InstallQuestion[]) => {
     if (type === "select" || type === "multiselect")
       log.debug(`Setup question with choices=${JSON.stringify(choices)}`);
 
-    let def: number | boolean;
     // case have choice
-    if (choices) {
+    if (i.choices && i.choices.length > 0) {
       if (typeof i.default === "string") {
         // default is one of the choices
         def = choices.findIndex(v => v.value === i.default);
         // default is NOT one of the choices (fallback)
         if (def < 0) def = 0;
-      } else {
-        // wrong input default (fallback)
-        def = 0;
       }
     } else {
       def = typeof i.default === "boolean" ? i.default : true;

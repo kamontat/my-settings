@@ -3,7 +3,7 @@ import { PrintStartCommand } from "../../../utils";
 import { Logger } from "../../../../../model/logger";
 import { Ask } from "../../homebrew/install/utils";
 import { PromptType } from "prompts";
-import { Exec, Write } from "../../../../commandline";
+import { Write } from "../../../../commandline";
 
 const name = "Safari";
 const subname = undefined;

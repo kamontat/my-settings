@@ -34,6 +34,13 @@ export default {
       desc: "Add comfirmation how 'ctrl+c' should be",
       type: "boolean",
       default: true
+    },
+    default: {
+      alias: "D",
+      desc:
+        "The command will never prompt anything, and call with all default value (Experiment)",
+      type: "boolean",
+      default: false
     }
   },
   action: (log: Logger, argv: Arguments) => {
@@ -42,10 +49,16 @@ export default {
     const internet: boolean = argv.internet;
     const exit: boolean = (argv.exit === undefined && false) || argv.exit;
     const ask: boolean = (argv.e === undefined && true) || argv.e;
+    const makePrompt: boolean =
+      (argv.default === undefined && false) || argv.default;
 
-    log.debug(`Start command with ${exit ? "exitable" : "not-exitable"}`);
+    log.debug(
+      `Start command with ${makePrompt ? "never prompts" : "initial prompts"}`
+    );
+
     Asker.CONST.setAsk(ask);
     Asker.CONST.setExit(exit);
+    Asker.CONST.NeverPrompts(makePrompt);
 
     switch (argv.kind) {
       case "mac":

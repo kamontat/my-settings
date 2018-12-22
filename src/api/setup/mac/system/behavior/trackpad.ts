@@ -113,6 +113,7 @@ export const MacTrackpad = (log: Logger, _opts: {}) => {
       type: "select",
       name: "loop_up_gesture",
       message: "Look up gesture",
+      initial: 0,
       choices: [
         {
           title: "Use force click (in support force click MacOS only)",
@@ -204,7 +205,7 @@ ${chalk.redBright("Natural")}: Swipe fingers ${chalk.bold.inverse(
       type: "multiselect",
       name: "app_expose",
       message: "Enable App Exposé",
-      initial: true,
+      initial: [4],
       choices: [
         {
           title: `Swipe down with ${chalk.blue("Three finger")} gesture`,

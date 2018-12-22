@@ -6,25 +6,35 @@ import { BrewTap, BrewIsTapped } from "../../utils";
 import { Question } from "../../../../../ask";
 import { Choice } from "prompts";
 
-export const CustomFontChoice = (name: string, url: string) => {
+export const CustomFontChoice = (
+  name: string,
+  url: string,
+  opts?: { default?: boolean }
+) => {
   const dashname = name.toLowerCase().replace(/ /g, "-");
+
   return {
     title: `Font ${name} (${url})`,
-    value: `font-${dashname}`
+    value: `font-${dashname}`,
+    selected: opts && opts.default
   };
 };
 
-export const GoogleFontChoice = (name: string, url?: string) => {
+export const GoogleFontChoice = (
+  name: string,
+  opts?: { url?: string; default?: boolean }
+) => {
   const dashname = name.toLowerCase().replace(/ /g, "-");
   const urlname = name.replace(/ /g, "%20");
 
   const title = `Font ${name} (${
-    url ? url : `https://fonts.google.com/specimen/${urlname}`
+    opts && opts.url ? opts.url : `https://fonts.google.com/specimen/${urlname}`
   })`;
   const value = `font-${dashname}`;
   return {
     title: title,
-    value: value
+    value: value,
+    selected: opts && opts.default
   } as Choice;
 };
 
@@ -65,7 +75,7 @@ export const InstallBrewFont = (log: Logger, _opts: {}) => {
     }),
     ...InstallQuestion(log, [
       FontGroup("Google font set #1", "Popular google set", [
-        GoogleFontChoice("Karla"),
+        GoogleFontChoice("Karla", { default: true }),
         GoogleFontChoice("Lora"),
         GoogleFontChoice("Playfair Display"),
         GoogleFontChoice("Playfair Display SC"),
@@ -73,12 +83,12 @@ export const InstallBrewFont = (log: Logger, _opts: {}) => {
         GoogleFontChoice("Archivo Narrow"),
         GoogleFontChoice("Spectral"),
         GoogleFontChoice("Fjalla One"),
-        GoogleFontChoice("Roboto"),
+        GoogleFontChoice("Roboto", { default: true }),
         GoogleFontChoice("Montserrat"),
         GoogleFontChoice("Rubik"),
         GoogleFontChoice("Cardo"),
         GoogleFontChoice("Cormorant"),
-        GoogleFontChoice("Work Sans"),
+        GoogleFontChoice("Work Sans", { default: true }),
         GoogleFontChoice("Concert one"),
         GoogleFontChoice("Arvo"),
         GoogleFontChoice("Lato"),
@@ -89,7 +99,7 @@ export const InstallBrewFont = (log: Logger, _opts: {}) => {
       ]),
       FontGroup("Google font set #2", "Font Optimized for UI", [
         GoogleFontChoice("PT Sans"),
-        GoogleFontChoice("Fira Sans"),
+        GoogleFontChoice("Fira Sans", { default: true }),
         GoogleFontChoice("Nunito"),
         GoogleFontChoice("Oxygen")
       ]),
@@ -99,18 +109,23 @@ export const InstallBrewFont = (log: Logger, _opts: {}) => {
         GoogleFontChoice("Merriweather"),
         GoogleFontChoice("Merriweather Sans"),
         GoogleFontChoice("Open Sans"),
-        GoogleFontChoice(
-          "Noto Sans Thai",
-          "https://www.google.com/get/noto/#sans-thai"
-        ),
-        GoogleFontChoice("Noto Sans", "https://www.google.com/get/noto"),
-        GoogleFontChoice("Source Sans Pro")
+        GoogleFontChoice("Noto Sans Thai", {
+          url: "https://www.google.com/get/noto/#sans-thai"
+        }),
+        GoogleFontChoice("Noto Sans", {
+          url: "https://www.google.com/get/noto",
+          default: true
+        }),
+        GoogleFontChoice("Source Sans Pro", { default: true })
       ]),
       FontGroup("My Favorite set", "Development", [
-        CustomFontChoice("Fira code", "https://github.com/tonsky/FiraCode"),
+        CustomFontChoice("Fira code", "https://github.com/tonsky/FiraCode", {
+          default: true
+        }),
         CustomFontChoice(
           "Firacode Nerd Font",
-          "https://github.com/ryanoasis/nerd-fonts"
+          "https://github.com/ryanoasis/nerd-fonts",
+          { default: true }
         ),
         CustomFontChoice(
           "Firamono Nerd Font",
@@ -118,7 +133,8 @@ export const InstallBrewFont = (log: Logger, _opts: {}) => {
         ),
         CustomFontChoice(
           "Firacode Nerd Font Mono",
-          "https://github.com/ryanoasis/nerd-fonts"
+          "https://github.com/ryanoasis/nerd-fonts",
+          { default: true }
         ),
         CustomFontChoice(
           "Firamono Nerd Font Mono",

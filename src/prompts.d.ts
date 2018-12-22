@@ -64,7 +64,7 @@ declare module "prompts" {
       type: ValueOrFunc<PromptType, PromptType | Falsy> | Falsy;
       name: ValueOrFunc<T>;
       message?: ValueOrFunc<T, string>;
-      initial?: ValueOrFunc<T, string | number | boolean>;
+      initial?: ValueOrFunc<T, string | number | boolean | Array<string>>;
       style?: string;
       format?: PrevCaller<T, void>;
       validate?: PrevCaller<T, void>;

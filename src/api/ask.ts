@@ -1,4 +1,4 @@
-import prompts, { PromptObject, Answers } from "prompts";
+import prompts, { PromptObject, Answers, PromptType } from "prompts";
 import { Logger } from "../model/logger";
 
 import Chalk from "chalk";
@@ -73,7 +73,9 @@ export class Asker {
       const _answers = question.reduce(
         (p, c) => {
           const type =
-            typeof c.type === "function" ? c.type(prev, p, c) : c.type;
+            typeof c.type === "function"
+              ? c.type(prev, p as Answers<PromptType>, c)
+              : c.type;
           const name =
             typeof c.name === "function" ? c.name(prev, p, c) : c.name;
 

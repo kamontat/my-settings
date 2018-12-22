@@ -51,8 +51,6 @@
     "clean:all": "rimraf bin .caches *.log log node_modules yarn.lock",
     "prebuild": "yarn compile:prod",
     "build": "pkg --out-path bin .",
-    "prenexe-build": "yarn compile:prod",
-    "nexe-build": "nexe --input .caches/my-settings.js --resource \"./package.json\" --output bin/my-settings --verbose --temp .",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },
@@ -63,7 +61,7 @@
     "setupTestFrameworkScriptFile": "./test/jest.setup.js",
     "preset": "ts-jest",
     "testEnvironment": "node",
-    "testMatch": ["**/src/**/__tests__/**/*.ts?(x)", "**/src/**/?(*.)+(spec|test).ts?(x)"],
+    "testMatch": ["**/src/**/__tests__/**/*.ts?(x)", "**/src/**/?(*.)+(spec|test).ts?(x)", "**/test/**/*.spec.ts"],
     "collectCoverageFrom": ["src/**/*.ts"],
     "coverageReporters": ["json", "lcov", "text-summary"],
     "moduleFileExtensions": ["js", "ts"],

@@ -1,4 +1,3 @@
 {
-  "extends": "github>kamontat/renovate-config",
-  "labels": ["bot", "dependencies"]
+  "extends": "github>kamontat/renovate-config"
 }
